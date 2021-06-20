@@ -7,7 +7,7 @@ services:
         ports:
             - 3306:3306
         volumes:
-            - ./.mysql:/var/lib/mysql
+            - mysql-data:/var/lib/mysql
         environment:
             - MYSQL_DATABASE=${DATABASE_NAME}
             - MYSQL_USER=${DATABASE_USER}
@@ -17,10 +17,16 @@ services:
     php:
         depends_on:
             - mysql
-        build: build/php
+        build:
+            context: build/php
+            args:
+                LINUX_USER: ${LINUX_USER}
+                LINUX_USER_ID: ${LINUX_USER_ID}
+                LINUX_GROUP: ${LINUX_GROUP}
+                LINUX_GROUP_ID: ${LINUX_GROUP_ID}
         restart: on-failure
         volumes:
-            - ./application/:/var/www/application/
+            - ./application:/var/www/application
         environment:
             - DATABASE_URL=mysql://${DATABASE_USER}:${DATABASE_PASSWORD}@mysql:3306/${DATABASE_NAME}?serverVersion=5.7
 
@@ -55,3 +61,6 @@ services:
         image: mailhog/mailhog:latest
         ports:
             - "8025:8025"
+
+volumes:
+    mysql-data:

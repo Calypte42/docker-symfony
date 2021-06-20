@@ -19,4 +19,16 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony/b
 
 COPY php.ini /usr/local/etc/php/conf.d/zzz-php.ini
 
+ARG LINUX_USER
+ARG LINUX_USER_ID
+ARG LINUX_GROUP
+ARG LINUX_GROUP_ID
+
+RUN addgroup -S ${LINUX_GROUP} -g ${LINUX_GROUP_ID} && adduser -S ${LINUX_USER} -G ${LINUX_GROUP} --uid ${LINUX_USER_ID}
+
+RUN mkdir /var/www/application
+RUN chown -R ${LINUX_USER}:${LINUX_GROUP} /var/www/application
+
+USER ${LINUX_USER}
+
 WORKDIR /var/www/application
