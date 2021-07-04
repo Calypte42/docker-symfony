@@ -4,8 +4,7 @@ RUN apk add --update --no-cache \
         bash \
         icu-dev \
         curl \
-        nodejs \
-		nodejs-npm \
+        npm \
         git \
     && docker-php-ext-install pdo_mysql intl \
     && rm -rf /tmp/* /var/tmp/*
